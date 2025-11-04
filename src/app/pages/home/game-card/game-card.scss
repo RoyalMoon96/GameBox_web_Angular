@@ -1,0 +1,49 @@
+
+.card {
+    min-height: 143.75px; 
+    width: 225px;
+    
+    background-image: url('https://theexchange.com/cdn/shop/products/NatsumeChampionshipWrestling_USA.png?v=1622110995&width=720'); /* Reemplaza con la URL de tu imagen */
+  background-size: cover;
+  background-position: center; 
+  background-repeat: no-repeat; 
+
+  display: flex;
+  justify-content: center;
+}
+
+img{
+    max-height: 65px;
+    width: 140px;
+    border-radius: 0 0 10px 10px ;
+    margin: 0;
+    background-color: black;
+    resize: both;
+    border: 3px solid darkgrey;
+}
+p{
+    margin: 0;
+    padding: 0;
+    line-height: .5;
+    justify-self: center;
+    font-family:fantasy;
+}
+
+:host {
+    display: block; 
+    border-radius: 8px;
+    cursor: pointer;
+    
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    .card-container{
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+}
+
+:host:hover {
+    transform: translateY(-10px) scale(1.02);
+    .card-container{
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+}

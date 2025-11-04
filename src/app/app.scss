@@ -1,0 +1,8 @@
+@use './shared/scss/colors.scss' as colors;
+
+main{
+    background-color: colors.$background-color;
+    margin: 0;
+    height: calc(100vh - 80px - 20px);
+
+}

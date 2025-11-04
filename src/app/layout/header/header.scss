@@ -1,0 +1,23 @@
+@use '../../shared/scss/colors.scss' as colors;
+
+mat-toolbar{
+  background-color: colors.$primary-color;
+  height: 80px;
+  margin:0;
+  padding: 0 30px;
+  justify-content: space-between;
+}
+
+.logo{
+  margin: 10px ;
+}
+
+div{
+  display: flex;
+  align-items: center;
+}
+
+.app-navegator{
+  width: calc(100vw/3);
+  justify-content: space-between;
+}

@@ -1,0 +1,10 @@
+@use '../../shared/scss/colors.scss' as colors;
+
+footer{
+  background-color: colors.$primary-color;
+  height: 20px;
+  margin: 0;
+}
+div{
+    margin-left: 20px;
+}

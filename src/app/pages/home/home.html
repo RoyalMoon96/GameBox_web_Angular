@@ -1,0 +1,23 @@
+<div>
+    <div class="Title">
+        <h1>Games</h1>
+    </div>
+    <div class="subCat">
+        <h2>Section 1</h2>
+        <div class="game-list">
+            @for (game of games_cat1; track $index) {
+                <div class="card-placeholder">
+                    <app-game-card [gameName]="game.name" [gameImg]="game.img_url"></app-game-card>
+                </div>
+            }
+        </div>
+        <h2>Section 2</h2>
+        <div class="game-list">
+            @for (game of games_cat2; track $index) {
+                <div class="card-placeholder">
+                    <app-game-card [gameName]="game.name" [gameImg]="game.img_url"></app-game-card>
+                </div>
+            }
+        </div>
+    </div>
+</div>
