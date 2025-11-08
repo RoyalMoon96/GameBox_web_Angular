@@ -1,0 +1,43 @@
+<div class="main-horizontal-container">
+    <div class="game-container">
+        @if (loading) {
+            <div class="loader">
+                <mat-progress-spinner
+                class="spinner"
+                diameter="70"
+                strokeWidth="5"
+                mode="indeterminate">
+            </mat-progress-spinner>
+            <p>Cargando juego...</p>
+        </div>
+        }
+        <iframe
+                #gameFrame
+                class="game-frame"
+                [attr.src]="srcGame"
+                (load)="onIframeLoad()"
+                [hidden]="loading"
+                [style.opacity]="loading ? 0 : 1"
+        >
+        </iframe>
+    </div>
+    <div class="chat-container">
+        <app-chat></app-chat>
+    </div>
+</div>
+<div class="complement-horizontal-container">
+    <div class="description-container">
+        <h2>About the game</h2>
+        <p>
+            {{game.description}}
+        </p>
+    </div>
+    <div class="games-list">
+        <h2>{{game.categorys[0]}}</h2>
+        @for (similarGame of similar_games; track $index) {
+            <div class="similarGame">
+                <a>{{similarGame.name}}</a>
+            </div>
+        }
+    </div>
+</div>

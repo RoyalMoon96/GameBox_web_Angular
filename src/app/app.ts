@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit, signal } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { Header } from './layout/header/header';
 import { Footer } from './layout/footer/footer';
 
@@ -9,15 +9,16 @@ import { Footer } from './layout/footer/footer';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
-  protected readonly title = signal('GameBox_web_Angular');
-    nombre: string = "Francisco"; 
-  
+export class App implements OnInit {
+  constructor(private router: Router) {}
 
-  constructor() {
-    setTimeout( ()=>{
-      this.nombre= "Juan";
+  ngOnInit() {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('message', (event) => {
+        if (event.origin === window.location.origin && event.data?.type === 'redirect') {
+          this.router.navigateByUrl(event.data.route);
+        }
+      });
     }
-    ,3000);
   }
 }

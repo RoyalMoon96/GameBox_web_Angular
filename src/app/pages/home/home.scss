@@ -34,11 +34,8 @@ div{
 
     background-color: colors.$background-color; 
 
-    /* La magia ocurre aquí con las sombras */
     box-shadow: 
-        /* Sombra superior izquierda (clara/luz) - parece que la luz viene de arriba */
         inset 5px 5px 10px rgba(0, 0, 0, 0.3), 
-        /* Sombra inferior derecha (oscura) - crea la profundidad */
         inset -5px -5px 10px black;
 
 }

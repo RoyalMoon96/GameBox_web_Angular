@@ -1,0 +1,29 @@
+<div #chatContainer class="chat-container">
+    <div>
+        @for (msg_data of messages; track $index) {
+            @if (msg_data.username == SERVER_NAME) {
+                <div class="server-msg"> 
+                    <p>{{msg_data.msg}}</p>
+                </div>
+            }
+            @if (msg_data.username != SERVER_NAME) {
+                <div class="msg"> 
+                    <div>
+                        <p>{{msg_data.username}}: {{msg_data.msg}}</p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    <div class="chat-bar">
+        <input
+              [(ngModel)]="message"
+              placeholder="Escribe un mensaje..."
+              style="width: 70%;"
+              (keyup.enter)="sendMessage()"
+            />
+        <button matIconButton (click)="sendMessage()">
+            <mat-icon>send</mat-icon>
+        </button>
+    </div>
+</div>

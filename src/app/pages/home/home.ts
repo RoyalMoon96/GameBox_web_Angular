@@ -1,14 +1,17 @@
 // Angular
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 // Matirials
 
 //Services
+import { GamesManagerService } from '../../shared/services/games-manager/games-manager-service';
 
 //directives
 
 //Components
 import { GameCard } from './game-card/game-card';
+import { IGame } from '../../shared/types/igame';
 
 @Component({
   selector: 'app-home',
@@ -16,24 +19,17 @@ import { GameCard } from './game-card/game-card';
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
-export class Home {
-  games_cat1=[
-    {name:"Tic Tac Toe", img_url:"https://t4.ftcdn.net/jpg/04/23/42/55/360_F_423425529_Ry6bKSuIhrOqnfBrMYghKZOVtyUqktQ1.jpg"},
-    {name:"Connect 4", img_url:"https://s7d9.scene7.com/is/image/OCProduction/fg653?wid=800&hei=600"},
-    {name:"Snake", img_url:"https://hackster.imgix.net/uploads/attachments/1247634/_FmqeflH6CR.blob?auto=compress%2Cformat&w=400&h=300&fit=min"},
-    {name:"Game 4", img_url:"https://material.angular.dev/assets/img/examples/shiba2.jpg"},
-    {name:"Game 5", img_url:"https://material.angular.dev/assets/img/examples/shiba2.jpg"},
-    {name:"Game 6", img_url:"https://material.angular.dev/assets/img/examples/shiba2.jpg"},
-    {name:"Game 7", img_url:"https://material.angular.dev/assets/img/examples/shiba2.jpg"},
-    {name:"Game 8", img_url:"https://material.angular.dev/assets/img/examples/shiba2.jpg"},
-    {name:"Game 9", img_url:"https://material.angular.dev/assets/img/examples/shiba2.jpg"}
-  ]
-  games_cat2=[
-    {name:"Game 1", img_url:"https://material.angular.dev/assets/img/examples/shiba2.jpg"},
-    {name:"Game 3", img_url:"https://material.angular.dev/assets/img/examples/shiba2.jpg"},
-    {name:"Game 4", img_url:"https://material.angular.dev/assets/img/examples/shiba2.jpg"},
-    {name:"Game 6", img_url:"https://material.angular.dev/assets/img/examples/shiba2.jpg"},
-    {name:"Game 9", img_url:"https://material.angular.dev/assets/img/examples/shiba2.jpg"}
-  ]
+export class Home implements OnInit {
+  games_cat1:IGame[]=[]
+  games_cat2:IGame[]=[]
 
+  constructor(private router: Router, private gamesManagerService: GamesManagerService) {}
+  ngOnInit(): void {
+    this.games_cat1=this.gamesManagerService.getGamesByCategory("All")
+    this.games_cat2=this.gamesManagerService.getGamesByCategory("BoardGames")
+  }
+
+  openGame(game: IGame) {
+    this.router.navigate(['/games', game.slug]);
+  }
 }
