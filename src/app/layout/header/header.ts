@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 //Services
 
@@ -20,7 +21,7 @@ import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, MatCardModule, MatDividerModule],
+  imports: [CommonModule, MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, MatCardModule, MatDividerModule, MatSnackBarModule],
   templateUrl: './header.html',
   styleUrl: './header.scss'
 })
@@ -37,7 +38,10 @@ export class Header {
   };
 
 
-  constructor(private router: Router){}
+  constructor(
+    private router: Router,
+    private snackBar: MatSnackBar
+  ){}
 
   irAHome() {
     this.router.navigate(['/home']);
@@ -58,7 +62,13 @@ export class Header {
     //---- Simular cerrar sesión
     console.log('BABAY');
     this.isLogeado = false;
-    this.router.navigate(['/login']);
+    this.router.navigate(['/home']);
+
+    this.snackBar.open('Hasta la próxima', 'Cerrar', {
+      duration: 2000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
   }
 
 }
