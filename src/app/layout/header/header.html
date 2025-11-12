@@ -1,11 +1,11 @@
 <mat-toolbar>
   <div class="app-navegator">
-    <div class="logo">
+    <div class="logo" (click)="irAHome()">
       <mat-icon>videogame_asset</mat-icon>
       Logo
     </div>
-    
-    <button matButton extended>
+
+    <button matButton extended (click)="irAHome()">
       <mat-icon>home</mat-icon>
       Home
     </button>
@@ -14,10 +14,43 @@
       Stats
     </button>
   </div>
+
+
   <div class="user-info">
-    <a>
-      UserName
-      <mat-icon>person</mat-icon>
-    </a>
+    <!--Logueado -->
+    @if (isLogeado) {
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-avatar-btn">
+        <img [src]="usuario.avatar" alt="Avatar" class="user-avatar">
+      </button>
+
+      <mat-menu #userMenu="matMenu" class="user-menu">
+        <div mat-menu-item disabled class="user-menu-header">
+          <div class="user-details">
+            <strong>{{usuario.nombre}}</strong>
+            <small>{{usuario.email}}</small>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <button mat-menu-item (click)="irAConfiguracion()">
+          <mat-icon>settings</mat-icon>
+          <span>Configuración</span>
+        </button>
+
+        <button mat-menu-item (click)="cerrarSesion()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar sesión</span>
+        </button>
+      </mat-menu>
+
+
+    } @else {
+      <!-- No logueado -->
+      <button mat-button (click)="irALogin()">
+        <mat-icon>login</mat-icon>
+        Iniciar sesión
+      </button>
+    }
   </div>
 </mat-toolbar>

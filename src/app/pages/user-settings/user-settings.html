@@ -1,0 +1,65 @@
+<div class="settings-container">
+  <mat-card class="settings-card">
+    <mat-card-header>
+      <div class="header-content">
+        <mat-icon class="settings-icon">settings</mat-icon>
+        <h1>Configuración de Usuario</h1>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="avatar-section">
+        <img [src]="usuario.avatar" alt="Avatar" class="avatar-preview">
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="cambiarImagen()">
+          <mat-icon>image</mat-icon>
+          Cambiar imagen
+        </button>
+      </div>
+
+      <form class="settings-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre de usuario</mat-label>
+          <input
+            matInput
+            type="text"
+            [(ngModel)]="nuevoNombre"
+            name="username"
+            placeholder="Ingresa tu nombre">
+          <mat-icon matPrefix>person</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Correo electrónico</mat-label>
+          <input
+            matInput
+            type="email"
+            [value]="usuario.email"
+            disabled>
+          <mat-icon matPrefix>email</mat-icon>
+        </mat-form-field>
+
+        <div class="button-group">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="guardarCambios()">
+            <mat-icon>save</mat-icon>
+            Guardar Cambios
+          </button>
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="cancelar()">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
