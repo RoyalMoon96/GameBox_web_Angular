@@ -20,13 +20,13 @@ import { IGame } from '../../shared/types/igame';
   styleUrl: './home.scss'
 })
 export class Home implements OnInit {
-  games_cat1:IGame[]=[]
-  games_cat2:IGame[]=[]
+  games_All:IGame[]=[]
+  games_BoardGames:IGame[]=[]
 
   constructor(private router: Router, private gamesManagerService: GamesManagerService) {}
   ngOnInit(): void {
-    this.games_cat1=this.gamesManagerService.getGamesByCategory("All")
-    this.games_cat2=this.gamesManagerService.getGamesByCategory("BoardGames")
+    this.games_All=this.gamesManagerService.getGamesByCategory("All")
+    this.games_BoardGames=this.gamesManagerService.getGamesByCategory("BoardGames")
   }
 
   openGame(game: IGame) {

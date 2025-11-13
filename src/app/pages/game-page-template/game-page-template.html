@@ -36,7 +36,7 @@
         <h2>{{game.categorys[0]}}</h2>
         @for (similarGame of similar_games; track $index) {
             <div class="similarGame">
-                <a>{{similarGame.name}}</a>
+                <a (click)="openGame(similarGame)" >{{similarGame.name}}</a>
             </div>
         }
     </div>

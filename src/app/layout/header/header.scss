@@ -21,3 +21,31 @@ div{
   width: calc(100vw/3);
   justify-content: space-between;
 }
+
+
+.user-info {
+  .user-avatar-btn {
+    width: 58px;
+    height: 58px;
+    padding: 0 !important;
+
+    .user-avatar {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+}
+
+::ng-deep .user-menu {
+  min-width: 250px;
+
+  .user-menu-header {
+    .user-details {
+      display: flex;
+      flex-direction: column;
+
+    }
+  }
+}
