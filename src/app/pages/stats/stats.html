@@ -1,0 +1,29 @@
+<div class="page-container">
+    <div class="stats-container">
+        <div class="stats-head">
+            <h1>My Stats</h1>
+            <button matMiniFab aria-label="Example icon button with a menu icon">
+                <mat-icon>download</mat-icon>
+            </button>
+        </div>
+        <div class="matches-container">
+            <p>
+                Total Wins: {{wins}}
+            </p>
+            <p>
+                Matches: {{matches.length}}
+            </p>
+            @for (match of matches; track $index) {
+                
+                <div class="match-card">
+                    <h3>Winer: {{match.winer}}</h3>
+                    <p>
+                        {{match.game}}:<br>
+                        {{match.details}}
+                    </p>
+                    {{match.date}}
+                </div>
+            }
+        </div>
+    </div>
+</div>

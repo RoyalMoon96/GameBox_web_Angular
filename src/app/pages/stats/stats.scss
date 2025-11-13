@@ -1,0 +1,33 @@
+.page-container{
+    display: flex;
+    align-self: center;
+    justify-content: center;
+}
+.stats-head{
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 20px 0px 0px;
+    button{
+        background-color: rgba(255, 255, 255, 0.05);
+        mat-icon{
+            color: black;
+        }
+    }
+}
+.stats-container{
+    background-color: #F8F8F8;
+    border-radius: 10px;
+    margin: 10px 0;
+    padding: 10px 20px;
+    width: 70vw;
+}
+.matches-container{
+    margin: 0 20px;
+}
+.match-card{
+    background-color: white;
+    border-radius: 20px;
+    margin: 10px 0;
+    padding: 1px 10px 10px 10px;
+
+}

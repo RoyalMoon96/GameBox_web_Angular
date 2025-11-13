@@ -3,5 +3,5 @@
 main{
     background-color: colors.$background-color;
     margin: 0;
-    height: calc(100vh - 80px - 20px);
+    min-height: calc(100vh - 80px - 20px);
 }

@@ -74,6 +74,11 @@ export class GamePageTemplate implements OnInit {
       this.router.navigate(['/not-found']);
     }
   }
+  openGame(game: IGame) {
+    this.router.navigate(['/games', game.slug]).then(()=>{
+      this.ngOnInit()
+    });
+  }
 
   onIframeLoad(){
     if (this.valid) {

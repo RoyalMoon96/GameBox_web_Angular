@@ -47,6 +47,10 @@ export class Header {
     this.router.navigate(['/home']);
     console.log('HOME');
   }
+  irAStats() {
+    this.router.navigate(['/stats']);
+    console.log('STATS');
+  }
 
   irALogin() {
     this.router.navigate(['/login']);
