@@ -10,6 +10,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
+// Services
+import { LoginService } from '../../shared/services/login/login-service';
+import { TokenService } from '../../shared/services/token/token-service';
+import { UserService } from '../../shared/services/user/user-service';
 @Component({
   selector: 'app-login',
   imports: [
@@ -32,11 +36,14 @@ export class Login {
 
   constructor(
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private loginService: LoginService,
+    private tokenService: TokenService,
+    private userService: UserService
   ) {}
 
   login() {
-    //---- Simular verificación HardCodeada
+    //---- Validación campos
     if (!this.email || !this.password) {
       this.snackBar.open('Completa todos los campos', 'Cerrar', {
         duration: 3000,
@@ -46,17 +53,32 @@ export class Login {
       return;
     }
 
-    //---- Simular login exitoso
-    this.snackBar.open('Bienvenido', 'Cerrar', {
-      duration: 2000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-      panelClass: ['success-snackbar']
-    });
+    //---- Login con servicios
+    this.loginService.login(this.email, this.password)
+      .then((res) => {
 
-    setTimeout(() => {
-      this.router.navigate(['/home']);
-    }, 1500);
+        this.tokenService.setToken(res.token);
+        this.userService.setLogueado(true);
+
+        this.snackBar.open('Bienvenido', 'Cerrar', {
+          duration: 2000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar']
+        });
+
+        setTimeout(() => {
+          this.router.navigate(['/home']);
+        }, 1500);
+      })
+
+      .catch((error) => {
+        this.snackBar.open(error.message || 'Error al iniciar sesión', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
+      });
   }
 
   irARegistro() {

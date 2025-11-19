@@ -9,16 +9,20 @@
       <mat-icon>home</mat-icon>
       Home
     </button>
-    <button matButton extended (click)="irAStats()">
-      <mat-icon>bar_chart</mat-icon>
-      Stats
-    </button>
+
+    <!--Logueado -->
+    <ng-container *appAuth>
+      <button matButton extended (click)="irAStats()">
+        <mat-icon>bar_chart</mat-icon>
+        Stats
+      </button>
+    </ng-container>
   </div>
 
 
   <div class="user-info">
     <!--Logueado -->
-    @if (isLogeado) {
+    <ng-container *appAuth>
       <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-avatar-btn">
         <img [src]="usuario.avatar" alt="Avatar" class="user-avatar">
       </button>
@@ -43,9 +47,10 @@
           <span>Cerrar sesión</span>
         </button>
       </mat-menu>
+    </ng-container>
 
 
-    } @else {
+    @if (!isLogeado) {
       <!-- No logueado -->
       <button mat-button (click)="irALogin()">
         <mat-icon>login</mat-icon>

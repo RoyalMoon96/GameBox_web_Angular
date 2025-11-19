@@ -39,7 +39,7 @@ export class Register {
   ) {}
 
   registrar() {
-    //---- Simular validación HardCodeada
+    //---- Validación campos
     if (!this.username || !this.email || !this.password || !this.confirmPassword) {
       this.snackBar.open('Por favor completa todos los campos', 'Cerrar', {
         duration: 3000,
@@ -48,7 +48,7 @@ export class Register {
       });
       return;
     }
-    //---- caso fallo
+    //---- Validación contraseñas
     if (this.password !== this.confirmPassword) {
       this.snackBar.open('Las contraseñas no coinciden', 'Cerrar', {
         duration: 3000,

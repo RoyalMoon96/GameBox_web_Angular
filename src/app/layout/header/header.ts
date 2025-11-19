@@ -13,15 +13,18 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 //Services
+import { UserService } from '../../shared/services/user/user-service';
+import { TokenService } from '../../shared/services/token/token-service';
 
 //directives
+import { Auth } from '../../shared/directives/auth';
 
 //Components
 
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, MatCardModule, MatDividerModule, MatSnackBarModule],
+  imports: [CommonModule, MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, MatCardModule, MatDividerModule, MatSnackBarModule, Auth],
   templateUrl: './header.html',
   styleUrl: './header.scss'
 })
@@ -40,13 +43,23 @@ export class Header {
 
   constructor(
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private userService: UserService,
+    private tokenService: TokenService
   ){}
+
+  ngOnInit(): void {
+    //---- Suscribirse al estado de autenticación
+    this.userService.authStatus.subscribe((status) => {
+      this.isLogeado = status;
+    });
+  }
 
   irAHome() {
     this.router.navigate(['/home']);
     console.log('HOME');
   }
+
   irAStats() {
     this.router.navigate(['/stats']);
     console.log('STATS');
@@ -63,9 +76,10 @@ export class Header {
   }
 
   cerrarSesion() {
-    //---- Simular cerrar sesión
+    //---- Cerrar sesión con servicio
+    this.userService.logout();
     console.log('BABAY');
-    this.isLogeado = false;
+
     this.router.navigate(['/home']);
 
     this.snackBar.open('Hasta la próxima', 'Cerrar', {
