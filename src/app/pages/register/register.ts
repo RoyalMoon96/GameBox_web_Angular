@@ -9,6 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { LoginService } from '../../shared/services/login/login-service';
+import { TokenService } from '../../shared/services/token/token-service';
+import { UserService } from '../../shared/services/user/user-service';
 
 @Component({
   selector: 'app-register',
@@ -35,7 +38,10 @@ export class Register {
 
   constructor(
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private loginService: LoginService,
+    private tokenService: TokenService,
+    private userService: UserService
   ) {}
 
   registrar() {
@@ -58,17 +64,23 @@ export class Register {
       return;
     }
 
-    //---- Simular registro exitoso
-    this.snackBar.open('¡Registro exitoso! Redirigiendo...', 'Cerrar', {
-      duration: 2000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-      panelClass: ['success-snackbar']
-    });
+    //---- registro con servicio propio
+    this.loginService.register(this.username, this.email, this.password)
+      .then((res) => {
+        this.tokenService.setToken(res.token);
+        if (this.tokenService.hasToken()){
+          this.userService.setLogueado(true);
 
-    setTimeout(() => {
-      this.router.navigate(['/login']);
-    }, 1500);
+          this.snackBar.open('¡Registro exitoso! Redirigiendo...', 'Cerrar', {
+            duration: 2000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar']
+          });
+
+          this.router.navigate(['/home']);
+      }
+      })
   }
 
   irALogin() {

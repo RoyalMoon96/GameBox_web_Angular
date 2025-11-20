@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 // Materials
@@ -14,6 +14,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { LoginService } from '../../shared/services/login/login-service';
 import { TokenService } from '../../shared/services/token/token-service';
 import { UserService } from '../../shared/services/user/user-service';
+import { GoogleButton } from './google-button/google-button';
 @Component({
   selector: 'app-login',
   imports: [
@@ -24,7 +25,8 @@ import { UserService } from '../../shared/services/user/user-service';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    GoogleButton
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss'
@@ -33,14 +35,18 @@ export class Login {
   email: string = '';
   password: string = '';
   hidePassword: boolean = true;
+  isBrowser = false;
 
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
     private loginService: LoginService,
     private tokenService: TokenService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   login() {
     //---- Validación campos
@@ -53,23 +59,18 @@ export class Login {
       return;
     }
 
-    //---- Login con servicios
+    //---- Login con servicio propio
     this.loginService.login(this.email, this.password)
       .then((res) => {
 
         this.tokenService.setToken(res.token);
-        this.userService.setLogueado(true);
+        if (this.tokenService.hasToken()){
+          this.userService.setLogueado(true);
 
-        this.snackBar.open('Bienvenido', 'Cerrar', {
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['success-snackbar']
-        });
+          this.openSnackBar_Bienvenido();
 
-        setTimeout(() => {
           this.router.navigate(['/home']);
-        }, 1500);
+        }
       })
 
       .catch((error) => {
@@ -81,7 +82,38 @@ export class Login {
       });
   }
 
+  openSnackBar_Bienvenido(){
+    this.snackBar.open('Bienvenido', 'Cerrar', {
+      duration: 2000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['success-snackbar']
+    });
+  }
+
   irARegistro() {
     this.router.navigate(['/register']);
   }
+
+  onGoogleLogin(credential: string) {
+  console.log("Token de Google recibido:", credential);
+
+  this.loginService.loginWithGoogle(credential).subscribe({
+    next: (res) => {
+      console.log("Login con Google OK:", res);
+      this.tokenService.setToken(res.token);
+      if (this.tokenService.hasToken()){
+        this.userService.setLogueado(true);
+
+        this.openSnackBar_Bienvenido();
+
+        this.router.navigate(['/home']);
+        }
+      
+    },
+    error: (err) => {
+      console.error("Error en Google Login:", err);
+    }
+  });
+}
 }

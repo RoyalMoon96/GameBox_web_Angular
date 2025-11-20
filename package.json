@@ -44,6 +44,7 @@
     "@angular/cli": "^20.2.2",
     "@angular/compiler-cli": "^20.2.0",
     "@types/express": "^5.0.1",
+    "@types/google.accounts": "^0.0.18",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^20.17.19",
     "jasmine-core": "~5.9.0",

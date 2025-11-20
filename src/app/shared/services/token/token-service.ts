@@ -7,8 +7,10 @@ export class TokenService {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   setToken(token: string): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem("token", token);
+    if (!!token) {
+      if (isPlatformBrowser(this.platformId)) {
+        localStorage.setItem("token", token);
+      }
     }
   }
 

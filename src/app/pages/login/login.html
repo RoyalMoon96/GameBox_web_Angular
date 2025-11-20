@@ -46,6 +46,9 @@
           (click)="login()">
           Iniciar Sesión
         </button>
+        @if (isBrowser) {
+          <app-google-button (googleLogin)="onGoogleLogin($event)"></app-google-button>
+        }
       </form>
 
       <div class="register-link">

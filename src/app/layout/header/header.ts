@@ -14,10 +14,11 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 //Services
 import { UserService } from '../../shared/services/user/user-service';
-import { TokenService } from '../../shared/services/token/token-service';
 
 //directives
 import { Auth } from '../../shared/directives/auth';
+import { Iuser } from '../../shared/types/iuser';
+import { Observable } from 'rxjs';
 
 //Components
 
@@ -31,27 +32,26 @@ import { Auth } from '../../shared/directives/auth';
 export class Header {
 
   cuenta: number = 10;
-  isLogeado: boolean = true
+  isLogeado: boolean = false
 
-  //---- Info del usuario HardCodeada
-  usuario = {
-    nombre: 'PptoClvUnClvto',
-    email: 'enlacalva@deuncalvito.com',
-    avatar: 'https://lumiere-a.akamaihd.net/v1/images/darth-vader-main_4560aff7.jpeg?region=0%2C67%2C1280%2C720'
-  };
 
+  usuario: Iuser
 
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
     private userService: UserService,
-    private tokenService: TokenService
-  ){}
-
+  ){
+    this.usuario = this.userService.CleanUser()
+  }
   ngOnInit(): void {
     //---- Suscribirse al estado de autenticación
     this.userService.authStatus.subscribe((status) => {
       this.isLogeado = status;
+    });
+    //---- Suscribirse a la info del usuario
+    this.userService.user.subscribe((user) => {
+      this.usuario = user;
     });
   }
 
@@ -80,7 +80,7 @@ export class Header {
     this.userService.logout();
     console.log('BABAY');
 
-    this.router.navigate(['/home']);
+    this.irALogin()
 
     this.snackBar.open('Hasta la próxima', 'Cerrar', {
       duration: 2000,
