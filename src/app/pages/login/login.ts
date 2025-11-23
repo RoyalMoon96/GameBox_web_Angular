@@ -62,7 +62,8 @@ export class Login {
     //---- Login con servicio propio
     this.loginService.login(this.email, this.password)
       .then((res) => {
-
+        console.log("res:")
+        console.log(res)
         this.tokenService.setToken(res.token);
         if (this.tokenService.hasToken()){
           this.userService.setLogueado(true);
