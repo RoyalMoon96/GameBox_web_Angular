@@ -8,16 +8,25 @@
     </mat-card-header>
 
     <mat-card-content>
-      <form class="register-form">
+      <form [formGroup]="form" class="register-form" (ngSubmit)="registrar()">
         <mat-form-field appearance="outline">
           <mat-label>Nombre de usuario</mat-label>
           <input
             matInput
             type="text"
-            [(ngModel)]="username"
-            name="username"
+            formControlName="username"
             placeholder="PptClvNClvtNLClvDNClvt">
           <mat-icon matPrefix>person</mat-icon>
+          @if (form.controls['username'].invalid && form.controls['username'].touched) {
+            <mat-error>
+              @if (form.controls['username'].errors?.['required']) {
+                El nombre de usuario es requerido
+              }
+              @if (form.controls['username'].errors?.['minlength']) {
+                El nombre debe tener al menos 3 caracteres
+              }
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -25,10 +34,19 @@
           <input
             matInput
             type="email"
-            [(ngModel)]="email"
-            name="email"
+            formControlName="email"
             placeholder="tu@email.com">
           <mat-icon matPrefix>email</mat-icon>
+          @if (form.controls['email'].invalid && form.controls['email'].touched) {
+            <mat-error>
+              @if (form.controls['email'].errors?.['required']) {
+                El correo electrónico es requerido
+              }
+              @if (form.controls['email'].errors?.['email']) {
+                Debe ingresar un correo electrónico válido
+              }
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -36,8 +54,7 @@
           <input
             matInput
             [type]="hidePassword ? 'password' : 'text'"
-            [(ngModel)]="password"
-            name="password"
+            formControlName="password"
             placeholder="••••••••">
           <mat-icon matPrefix>lock</mat-icon>
           <button
@@ -47,6 +64,16 @@
             (click)="hidePassword = !hidePassword">
             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
+          @if (form.controls['password'].invalid && form.controls['password'].touched) {
+            <mat-error>
+              @if (form.controls['password'].errors?.['required']) {
+                La contraseña es requerida
+              }
+              @if (form.controls['password'].errors?.['minlength']) {
+                La contraseña debe tener al menos 8 caracteres
+              }
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -54,8 +81,7 @@
           <input
             matInput
             [type]="hideConfirmPassword ? 'password' : 'text'"
-            [(ngModel)]="confirmPassword"
-            name="confirmPassword"
+            formControlName="confirmPassword"
             placeholder="••••••••">
           <mat-icon matPrefix>lock</mat-icon>
           <button
@@ -65,14 +91,24 @@
             (click)="hideConfirmPassword = !hideConfirmPassword">
             <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
+          @if (form.controls['confirmPassword'].invalid && form.controls['confirmPassword'].touched) {
+            <mat-error>
+              @if (form.controls['confirmPassword'].errors?.['required']) {
+                Debe confirmar la contraseña
+              }
+              @if (form.controls['confirmPassword'].errors?.['passwordsMismatch']) {
+                Las contraseñas no coinciden
+              }
+            </mat-error>
+          }
         </mat-form-field>
 
         <button
           mat-raised-button
           color="primary"
           class="register-button"
-          type="button"
-          (click)="registrar()">
+          type="submit"
+          [disabled]="form.invalid">
           Registrarse
         </button>
       </form>

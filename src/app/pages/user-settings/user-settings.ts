@@ -11,6 +11,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
+// Services
+import { UserService } from '../../shared/services/user/user-service';
+
+// Types
+import { Iuser } from '../../shared/types/iuser';
+
 @Component({
   selector: 'app-user-settings',
   imports: [
@@ -28,20 +34,24 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   styleUrl: './user-settings.scss'
 })
 export class UserSettings {
-  //---- Datos del usuario (hardcodeados)
-  usuario = {
-    nombre: 'Pdrtclvonclvt',
-    email: 'enlacalva@deuncalvito.com',
-    avatar: 'https://lumiere-a.akamaihd.net/v1/images/darth-vader-main_4560aff7.jpeg?region=0%2C67%2C1280%2C720'
-  };
 
+  usuario: Iuser;
   nuevoNombre: string = '';
 
   constructor(
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private userService: UserService
   ) {
-    this.nuevoNombre = this.usuario.nombre;
+    this.usuario = this.userService.CleanUser();
+  }
+
+  ngOnInit(): void {
+    //---- Suscribirse a la info del usuario
+    this.userService.user.subscribe((user) => {
+      this.usuario = user;
+      this.nuevoNombre = user.username;
+    });
   }
 
   guardarCambios() {
@@ -53,9 +63,6 @@ export class UserSettings {
       });
       return;
     }
-
-    //---- Simular guardado de nuevo mombre de usuario
-    this.usuario.nombre = this.nuevoNombre;
 
     this.snackBar.open('Cambios guardados', 'Cerrar', {
       duration: 3000,

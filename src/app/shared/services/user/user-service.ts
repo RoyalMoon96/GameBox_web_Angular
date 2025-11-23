@@ -10,16 +10,16 @@ import { Iuser } from '../../types/iuser';
 })
 export class UserService {
 
-  private logueado: boolean = false;
-
   authStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   user: BehaviorSubject<Iuser> = new BehaviorSubject<Iuser>(this.CleanUser());
 
   constructor(private tokenService: TokenService) {
-    this.logueado = this.tokenService.hasToken();
-    this.authStatus.next(this.logueado);
-    if (!this.logueado){
-      this.user.next(this.CleanUser())
+    ///---- Autenticación si hay token
+    const hasToken = this.tokenService.hasToken();
+    this.authStatus.next(hasToken);
+
+    if (!hasToken) {
+      this.user.next(this.CleanUser());
     }
   }
   CleanUser(){
@@ -30,21 +30,20 @@ export class UserService {
       img: ''
     }
   }
-  
+
   setUser(user: Iuser): void {
     this.user.next(user)
   }
-  
+
   setLogueado(status: boolean): void {
-    this.logueado = status;
-    this.authStatus.next(this.logueado);
-    if (!this.logueado){
-      this.user.next(this.CleanUser())
+    this.authStatus.next(status);
+    if (!status) {
+      this.user.next(this.CleanUser());
     }
   }
 
   isLogueado(): boolean {
-    return this.logueado;
+    return this.authStatus.value;
   }
 
   logout(): void {
