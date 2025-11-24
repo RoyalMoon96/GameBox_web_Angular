@@ -15,11 +15,8 @@
     return html;
   };
   const roomFromStorage = () => localStorage.getItem('room') || '';
-  const playerFromStorage = () => localStorage.getItem('player') || '';
 
   // --- UI refs ---
-  const inputName = el('inputName');
-  const btnSaveName = el('btnSaveName');
   const btnCreate = el('btnCreate');
   const btnJoin = el('btnJoin');
   const joinCode = el('joinCode');
@@ -31,18 +28,33 @@
   const gameArea = el('gameArea');
   const resultDiv = el('result');
   const btnLeave = el('btnLeave');
+  const btnRestart = el('btnRestart');
+  const lobby = el('lobby');
 
   // --- state ---
   let socket = null;
   let myRole = null; // 'host' or 'guest'
   let board = [[0,0,0],[0,0,0],[0,0,0]];
-  let myPlayerName = localStorage.getItem('player') || '';
+  let myPlayerName = "";
   let currentRoom = roomFromStorage();
+  let opponentName = '';
 
   // initial UI values
-  if (myPlayerName) inputName.value = myPlayerName;
   if (currentRoom) roomCodeSpan.innerText = currentRoom;
 
+
+  function setMyName(username){
+    myPlayerName =  username;
+  }
+  function setOpponentName(username){
+    opponentName =  username;
+  }
+  function setMyRole(role){
+    if (role === 'P1') role = 'host'
+    if (role === 'P2') role = 'guest'
+    
+    myRole =  role;
+  }
   // --- ensure token exists ---
   // You should store auth token in localStorage as 'token' when the user logs in.
   function getToken() {
@@ -67,14 +79,19 @@
       console.error('connect_error', err);
       statusDiv.innerText = 'Error conexión: ' + (err && err.message);
     });
-
     // custom events
+    socket.on("playerInfo", ({ self, opponent }) => {
+      setMyName(self.username);
+      setOpponentName(opponent.username);
+      setMyRole(self.role);
+    });
+
     socket.on('roomCreated', (data) => {
       currentRoom = data.code;
       localStorage.setItem('room', currentRoom);
       roomCodeSpan.innerText = currentRoom;
       roleSpan.innerText = 'Host';
-      myRole = 'host';
+      setMyRole('host');
       statusDiv.innerText = 'Sala creada. Esperando oponente...';
     });
 
@@ -83,15 +100,20 @@
       localStorage.setItem('room', currentRoom);
       roomCodeSpan.innerText = currentRoom;
       roleSpan.innerText = data.role === 'P1' ? 'Host' : 'Guest';
-      myRole = data.role === 'P1' ? 'host' : 'guest';
+      setMyRole(data.role === 'P1' ? 'host' : 'guest');
       statusDiv.innerText = 'Te uniste a la sala ' + currentRoom;
     });
 
     socket.on('opponentJoined', (data) => {
+      setOpponentName(data.opponent.username);
       statusDiv.innerText = 'Oponente conectado: ' + data.opponent.username;
+      updateTurnUI();
     });
 
     socket.on('startGame', (data) => {
+      lobby.style.display = "none";
+      gameArea.style.display = 'block';
+      
       board = data.board || [[0,0,0],[0,0,0],[0,0,0]];
       gameArea.style.display = 'block';
       el('roomCode').innerText = data.code;
@@ -113,11 +135,21 @@
       } else {
         resultDiv.innerText = 'Empate';
       }
+      if (myRole === 'host') {
+        btnRestart.style.display = "block";
+      }
       statusDiv.innerText = 'Partida finalizada';
-      // limpiar room local
-      localStorage.removeItem('room');
     });
 
+    socket.on("restartGame", (data) => {
+      board = data.board;
+      updateBoardUI();
+      updateTurnUI(data.currentTurn);
+      resultDiv.innerText = "";
+      statusDiv.innerText = "Nueva partida iniciada";
+    });
+
+    
     socket.on('errorMessage', (msg) => {
       console.warn('Error server:', msg);
       statusDiv.innerText = 'Error: ' + msg;
@@ -140,31 +172,28 @@
   }
 
   function updateTurnUI(currentTurn) {
-    // currentTurn is 'P1' or 'P2'
-    const me = myRole === 'host' ? 'P1' : 'P2';
+    statusDiv.innerText=''
+    const meMarker = myRole === 'host' ? 'P1' : 'P2';
+    let myName = myPlayerName || 'Yo';
+    let otherName = opponentName || 'Oponente';
     if (!currentTurn) {
-      turnText.innerText = 'Turno: —';
-    } else {
-      const whose = currentTurn === me ? 'Tu turno' : 'Turno rival';
-      turnText.innerText = whose + ` (${currentTurn})`;
+      turnText.innerText = 'Turno —';
+      return;
     }
+
+    const isMyTurn = currentTurn === meMarker;
+    const nameToShow = isMyTurn ? myName : otherName;
+
+    turnText.innerText = `Turno de: ${nameToShow}`;
   }
 
   // Emit create/join/move
   function createRoom() {
-    if (!inputName.value) { alert('Guarda tu nombre antes'); return; }
-    myPlayerName = inputName.value.trim();
-    localStorage.setItem('player', myPlayerName);
-
     const s = connectSocket();
     s.emit('createRoom', { preferredCode: null /* server generates */ });
   }
 
   function joinRoom(code) {
-    if (!inputName.value) { alert('Guarda tu nombre antes'); return; }
-    myPlayerName = inputName.value.trim();
-    localStorage.setItem('player', myPlayerName);
-
     const s = connectSocket();
     s.emit('joinRoom', { code: code.toUpperCase() });
   }
@@ -184,19 +213,18 @@
     localStorage.removeItem('room');
     statusDiv.innerText = 'Has salido';
     gameArea.style.display = 'none';
+    btnRestart.style.display = "none";
+    lobby.style.display = "block";
     roomCodeSpan.innerText = '—';
     roleSpan.innerText = '—';
   }
 
   // --- Buttons ---
-  btnSaveName.onclick = () => {
-    const name = inputName.value.trim();
-    if (!name) return alert('Ingresa un nombre');
-    localStorage.setItem('player', name);
-    myPlayerName = name;
-    alert('Nombre guardado: ' + name);
+  btnRestart.onclick = () => {
+    if (myRole !== "host") return;
+    socket.emit("restartGame", { code: currentRoom });
+    btnRestart.style.display = "none";
   };
-
   btnCreate.onclick = () => {
     createRoom();
   };
