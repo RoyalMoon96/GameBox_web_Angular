@@ -1,1 +1,62 @@
-<p>CONECTA 4</p>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conecta 4 - Multiplayer</title>
+
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <div class="card">
+
+    <h2>Conecta 4 - Multijugador</h2>
+
+    <!-- LOBBY -->
+    <div id="lobby">
+      <div id="controls">
+
+        <button id="btnCreate">Crear sala (Host)</button>
+
+        <input id="joinCode" placeholder="Código de sala" maxlength="8" />
+        <button id="btnJoin">Unirse</button>
+
+        <div class="right">
+          Sala: <span id="roomCode">—</span> |
+          Rol: <span id="role">—</span>
+        </div>
+      </div>
+
+      <div id="status">Estado: no conectado</div>
+    </div>
+
+    <hr>
+    <br>
+
+    <!-- GAME -->
+    <div id="gameArea">
+      <div class="meta">
+        <div>Turno: <span id="turnText">—</span></div>
+        <div hidden><span id="meName">—</span> | <span id="opName">—</span></div>
+      </div>
+      
+      <!-- TABLERO -->
+      <div id="boardContainer">
+        <div id="board"></div>
+        <div id="animLayer"></div>
+      </div>
+      
+      <div id="result"></div>
+      <div class="right">
+        <button id="btnRestart">Reiniciar (Host)</button>
+        <button id="btnLeave">Salir</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script src="./game.js"></script>
+</body>
+</html>

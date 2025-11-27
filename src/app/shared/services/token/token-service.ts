@@ -22,6 +22,7 @@ export class TokenService {
   }
 
   hasToken(): boolean {
+    console.log(!!this.getToken())
     return !!this.getToken();
   }
 

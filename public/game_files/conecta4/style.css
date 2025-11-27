@@ -1,0 +1,87 @@
+:root {
+  --cell-size: calc(min(100vw, 100vh)/7 - (3px * 7 ) );
+  --gap: 8px;
+  --blue: #1e4f7a;
+}
+
+body {
+  background: rgb(165, 207, 241);
+  margin: 0;
+  padding: 18px;
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  margin: auto;
+  box-shadow: 0 5px 16px rgba(0,0,0,.1);
+}
+
+#controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#boardContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: auto;
+  max-height: fit-content;
+}
+
+#board {
+  aspect-ratio: 1 / 1;
+  margin: 10px;
+  max-width:fit-content;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, var(--cell-size));
+  padding: 15px;
+  background: #1e4f7a;
+  border-radius: 12px;
+  gap: 5px;
+  border: 6px solid black;
+}
+
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  float: left;
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%;
+  border:inset 6px solid black;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+}
+
+.disc {
+  width: 86%;
+  height: 86%;
+  border-radius: 50%;
+  position: absolute;
+  top: 7%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.disc.blank { 
+  position: absolute;
+  z-index: 0;
+}
+.disc.P1 { 
+  background: #c80606;
+  position: absolute;
+  z-index: 7;
+}
+.disc.P2 { 
+  background: #f9d206; 
+  position: absolute;
+  z-index: 7;
+}
