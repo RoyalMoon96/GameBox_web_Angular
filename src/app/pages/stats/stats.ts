@@ -12,6 +12,7 @@ import { StatsService } from '../../shared/services/stats/stats-service';
 
 //Components
 import { IMatch } from '../../shared/types/imatch';
+import { UserService } from '../../shared/services/user/user-service';
 
 @Component({
   selector: 'app-stats',
@@ -22,11 +23,13 @@ import { IMatch } from '../../shared/types/imatch';
 export class Stats implements OnInit{
   matches:IMatch[]=[]
   player_name:String=""
-  wins:number=1
-  constructor (private statsService:StatsService){}
+  wins: Number = 0
+  constructor (private statsService:StatsService, private userService: UserService){}
   ngOnInit(): void {
-    this.player_name="User1"
-    this.matches=this.statsService.getStats()
-    this.wins= this.matches.filter((m)=>m.winer==this.player_name).length
+    this.player_name 
+    this.statsService.getStats().subscribe(data => {
+      this.matches = data.stats;
+      this.wins = data.wins;
+    });
   }
 }
