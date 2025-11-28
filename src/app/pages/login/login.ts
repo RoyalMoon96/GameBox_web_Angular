@@ -110,7 +110,7 @@ export class Login {
 
         this.router.navigate(['/home']);
         }
-      
+
     },
     error: (err) => {
       console.error("Error en Google Login:", err);
