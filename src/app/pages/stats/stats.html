@@ -2,11 +2,11 @@
     <div class="stats-container">
         <div class="stats-head">
             <h1>My Stats</h1>
-            <button matMiniFab aria-label="Example icon button with a menu icon">
+            <button matMiniFab  (click)="exportToPdf()">
                 <mat-icon>download</mat-icon>
             </button>
         </div>
-        <div class="matches-container">
+        <div class="matches-container" #matchesContainer>
             <p>
                 Total Wins: {{wins}}
             </p>
