@@ -1,7 +1,8 @@
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+
 // Materials
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,7 +20,7 @@ import { GoogleButton } from './google-button/google-button';
   selector: 'app-login',
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -32,12 +33,12 @@ import { GoogleButton } from './google-button/google-button';
   styleUrl: './login.scss'
 })
 export class Login {
-  email: string = '';
-  password: string = '';
+  loginForm: FormGroup;
   hidePassword: boolean = true;
   isBrowser = false;
 
   constructor(
+    private fb: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
     private loginService: LoginService,
@@ -46,11 +47,19 @@ export class Login {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]]
+    });
   }
 
   login() {
-    //---- Validación campos
-    if (!this.email || !this.password) {
+
+    this.loginForm.markAllAsTouched();
+
+    //---- Validación formulario login
+    if (this.loginForm.invalid) {
       this.snackBar.open('Completa todos los campos', 'Cerrar', {
         duration: 3000,
         horizontalPosition: 'center',
@@ -59,8 +68,10 @@ export class Login {
       return;
     }
 
+    const { email, password } = this.loginForm.value;
+
     //---- Login con servicio propio
-    this.loginService.login(this.email, this.password)
+    this.loginService.login(email, password)
       .then((res) => {
         console.log("res:")
         console.log(res)
@@ -73,7 +84,6 @@ export class Login {
           this.router.navigate(['/home']);
         }
       })
-
       .catch((error) => {
         this.snackBar.open(error.message || 'Error al iniciar sesión', 'Cerrar', {
           duration: 3000,
