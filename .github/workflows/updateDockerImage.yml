@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKER_IMAGE_NAME: tu-usuario-dockerhub/gamebox-web-angular
-  AZURE_WEBAPP_NAME: tu-webapp-name  # Cambia esto por el nombre de tu Web App
+  DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/gamebox-web-front
+  AZURE_WEBAPP_NAME: Game-Box 
 
 jobs:
   build-and-push:
