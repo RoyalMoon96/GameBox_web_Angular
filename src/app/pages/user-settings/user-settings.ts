@@ -17,6 +17,9 @@ import { UserService } from '../../shared/services/user/user-service';
 // Types
 import { Iuser } from '../../shared/types/iuser';
 
+//components
+import { Uploader } from './uploader/uploader';
+import { UploadService } from '../../shared/services/uploader/upload-service';
 @Component({
   selector: 'app-user-settings',
   imports: [
@@ -28,7 +31,8 @@ import { Iuser } from '../../shared/types/iuser';
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
-    MatDialogModule
+    MatDialogModule,
+    Uploader
   ],
   templateUrl: './user-settings.html',
   styleUrl: './user-settings.scss'
@@ -41,7 +45,8 @@ export class UserSettings {
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
-    private userService: UserService
+    private userService: UserService,
+    private uploadService: UploadService
   ) {
     this.usuario = this.userService.CleanUser();
   }
@@ -63,13 +68,8 @@ export class UserSettings {
       });
       return;
     }
-
-    this.snackBar.open('Cambios guardados', 'Cerrar', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-      panelClass: ['success-snackbar']
-    });
+    this.uploadService.setUsername(this.nuevoNombre)
+    this.uploadService.upload(this.snackBar)
   }
 
   cancelar() {

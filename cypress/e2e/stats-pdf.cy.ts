@@ -1,8 +1,8 @@
 describe('Stats: PDF Export', () => {
   it('Should click download button and export PDF', () => {
     cy.visit('/login')
-    cy.get('input[name="email"]').type('spartan252@gmail.com')
-    cy.get('input[name="password"]').type('spartan252')
+    cy.get('input[name="email"]').type('testuser1@users.com')
+    cy.get('input[name="password"]').type('password123')
     cy.get('button[name="login"]').click()
 
     cy.get('#stats_btn').click()
