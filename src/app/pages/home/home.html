@@ -6,7 +6,7 @@
         <h2>All Games:</h2>
         <div class="game-list">
             @for (game of games_All; track $index) {
-                <div class="card-placeholder" (click)="openGame(game)">
+                <div [id]="'card_cat_All_'+game.slug" class="card-placeholder" (click)="openGame(game)">
                     <app-game-card [gameName]="game.name" [gameImg]="game.img_url"></app-game-card>
                 </div>
             }

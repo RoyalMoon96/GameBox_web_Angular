@@ -2,55 +2,59 @@
   <div class="app-navegator">
     <div class="logo" (click)="irAHome()">
       <mat-icon>videogame_asset</mat-icon>
-       Game Box
+      Game Box
     </div>
 
-    <button matButton extended (click)="irAHome()">
-      <mat-icon>home</mat-icon>
-      Home
-    </button>
-    <button matButton extended (click)="irAStats()">
-      <mat-icon>bar_chart</mat-icon>
-      Stats
-    </button>
+    <!-- Logueado -->
+    <ng-container *appAuth>
+      <button id="home_btn" matButton extended (click)="irAHome()">
+        <mat-icon>home</mat-icon>
+        Home
+      </button>
+
+      <button id="stats_btn" matButton extended (click)="irAStats()">
+        <mat-icon>bar_chart</mat-icon>
+        Stats
+      </button>
+    </ng-container>
   </div>
 
 
   <div class="user-info">
-    <!--Logueado -->
-    @if (isLogeado) {
-      <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-avatar-btn">
-        <img [src]="usuario.avatar" alt="Avatar" class="user-avatar">
+    <!-- Logueado -->
+    <ng-container *appAuth>
+      <button id="user_info" mat-icon-button [matMenuTriggerFor]="userMenu" class="user-avatar-btn">
+        <img [src]="usuario.img" alt="Avatar" class="user-avatar">
       </button>
 
       <mat-menu #userMenu="matMenu" class="user-menu">
         <div mat-menu-item disabled class="user-menu-header">
           <div class="user-details">
-            <strong>{{usuario.nombre}}</strong>
-            <small>{{usuario.email}}</small>
+            <strong id="userName">{{usuario.username}}</strong>
+            <small id="email" >{{usuario.email}}</small>
           </div>
         </div>
 
         <mat-divider></mat-divider>
 
-        <button mat-menu-item (click)="irAConfiguracion()">
+        <button id="settings_btn"  mat-menu-item (click)="irAConfiguracion()">
           <mat-icon>settings</mat-icon>
           <span>Configuración</span>
         </button>
 
-        <button mat-menu-item (click)="cerrarSesion()">
+        <button mat-menu-item id="logout_btn" (click)="cerrarSesion()">
           <mat-icon>logout</mat-icon>
           <span>Cerrar sesión</span>
         </button>
       </mat-menu>
+    </ng-container>
 
-
-    } @else {
-      <!-- No logueado -->
+    <!-- No logueado -->
+    <ng-container *ngIf="!isLogeado">
       <button mat-button (click)="irALogin()">
         <mat-icon>login</mat-icon>
         Iniciar sesión
       </button>
-    }
+    </ng-container>
   </div>
 </mat-toolbar>

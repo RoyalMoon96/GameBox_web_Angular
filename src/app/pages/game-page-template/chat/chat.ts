@@ -21,16 +21,35 @@ export class Chat {
 
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
   
-  constructor (private socketService: SocketService, private msgService:MsgService){
-    this.messages = this.msgService.getMessages()
-  }
+// chat.component.ts (fragmento)
+constructor (private socketService: SocketService, private msgService: MsgService) {
+  this.messages = this.msgService.getMessages();
 
-  sendMessage() {
-    if (this.message.trim()) {
-      this.socketService.sendMessage(this.message, this.username);
-      this.message = '';
-    }
-  }
+  // Suscribirse a mensajes del socket (chat)
+  this.socketService.onMessage().subscribe((payload) => {
+    // payload: { username: 'User01', msg: 'hola' } por ejemplo
+    this.msgService.addMessage({ username: payload.username, msg: payload.msg });
+  });
+
+  // opcional: saber cuando se unió el chat
+  this.socketService.onChatJoined().subscribe(({ room }) => {
+    this.msgService.addMessage({ username: MsgService.SERVER_NAME, msg: `Conectado al chat ${room}` });
+  });
+
+  this.socketService.onChatLeft().subscribe(({ room }) => {
+    this.msgService.addMessage({ username: MsgService.SERVER_NAME, msg: `Saliste del chat ${room}` });
+  });
+}
+
+sendMessage() {
+  if (!this.message.trim()) return;
+  const room = localStorage.getItem('room');
+  if (!room) return alert('No estás en ninguna sala de juego/chat');
+
+  this.socketService.sendChatMessage(this.message.trim(), room);
+  this.message = '';
+}
+
 
   ngAfterViewChecked() {
     this.scrollToBottom();

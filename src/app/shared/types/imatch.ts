@@ -1,5 +1,5 @@
 export interface IMatch {
-    winer: string,
+    winner: string,
     date: Date,
     game: string,
     details: string

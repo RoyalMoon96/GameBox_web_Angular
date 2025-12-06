@@ -8,8 +8,10 @@
     </mat-card-header>
 
     <mat-card-content>
+      <app-uploader [usuario]="usuario"></app-uploader>
+<!-- 
       <div class="avatar-section">
-        <img [src]="usuario.avatar" alt="Avatar" class="avatar-preview">
+        <img [src]="usuario.img" alt="Avatar" class="avatar-preview">
         <button
           mat-raised-button
           color="accent"
@@ -17,7 +19,7 @@
           <mat-icon>image</mat-icon>
           Cambiar imagen
         </button>
-      </div>
+      </div> -->
 
       <form class="settings-form">
         <mat-form-field appearance="outline">

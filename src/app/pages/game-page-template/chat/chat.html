@@ -17,12 +17,13 @@
     </div>
     <div class="chat-bar">
         <input
+            id="msg_user_input"
               [(ngModel)]="message"
               placeholder="Escribe un mensaje..."
               style="width: 70%;"
               (keyup.enter)="sendMessage()"
             />
-        <button matIconButton (click)="sendMessage()">
+        <button id="send_msg_btn" matIconButton (click)="sendMessage()">
             <mat-icon>send</mat-icon>
         </button>
     </div>

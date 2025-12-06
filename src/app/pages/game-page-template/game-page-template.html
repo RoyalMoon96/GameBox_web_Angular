@@ -12,17 +12,18 @@
         </div>
         }
         <iframe
-                #gameFrame
-                class="game-frame"
-                [attr.src]="srcGame"
-                (load)="onIframeLoad()"
-                [hidden]="loading"
-                [style.opacity]="loading ? 0 : 1"
-        >
+        #gameFrame
+                    class="game-frame"
+                    [attr.src]="srcGame"
+                    (load)="onIframeLoad()"
+                    [hidden]="loading"
+                    [style.opacity]="loading ? 0 : 1"
+                    [style]="'-webkit-transform:scale(0.5);-moz-transform-scale(0.5);'"
+            >
         </iframe>
     </div>
     <div class="chat-container">
-        <app-chat></app-chat>
+        <app-chat [username]="username" ></app-chat>
     </div>
 </div>
 <div class="complement-horizontal-container">

@@ -1,0 +1,35 @@
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+
+
+  .not-found-content {
+    text-align: center;
+
+    .error-icon {
+      font-size: 100px;
+      width: 100px;
+      height: 100px;
+      color: #666;
+    }
+
+    h1 {
+      font-size: 6rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: #555;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #777;
+    }
+
+  }
+}

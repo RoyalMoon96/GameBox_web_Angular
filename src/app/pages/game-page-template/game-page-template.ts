@@ -1,5 +1,5 @@
 // Angular
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { isPlatformBrowser } from '@angular/common';
@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { GamesManagerService } from '../../shared/services/games-manager/games-manager-service';
 import { SocketService } from '../../shared/services/socket/socket-service';
 import { MsgService } from '../../shared/services/msg/msg-service';
+import { RoomWatcherService } from '../../shared/services/socket/storage-watcher.service';
 
 //directives
 
@@ -36,7 +37,9 @@ export class GamePageTemplate implements OnInit {
 
   username: string;
   connected: boolean = false;
-  
+
+  currentChatRoom: string = '';
+
   constructor(
     private gamesManagerService: GamesManagerService,
     private socketService: SocketService,
@@ -44,6 +47,8 @@ export class GamePageTemplate implements OnInit {
     private router: Router, 
     private activatedRoute: ActivatedRoute, 
     private domSanitizer: DomSanitizer,
+    private roomWatcherService: RoomWatcherService,
+
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {
     this.game = this.gamesManagerService.getCleanGame();
@@ -55,6 +60,22 @@ export class GamePageTemplate implements OnInit {
     const gameSlug = this.activatedRoute.snapshot.paramMap.get('game');
     if (!isPlatformBrowser(this.platformId)) return;
     
+
+    if (localStorage){
+      localStorage.removeItem("room")
+    }
+
+    this.roomWatcherService.room$.subscribe(room => {
+      if (room) {
+        const chatRoom = `${room}_chat`;
+
+        if (chatRoom !== this.currentChatRoom) {
+          this.currentChatRoom = chatRoom;
+          this.joinChatRoom(chatRoom);
+        }
+      }
+    });
+
     try {
       const res = await fetch('/game_files/games.json');
       const data = await res.json();
@@ -79,7 +100,10 @@ export class GamePageTemplate implements OnInit {
       this.ngOnInit()
     });
   }
-
+  joinChatRoom(room: string) {
+    this.socketService.connect(this.username).then(()=>console.log(`Chat conectado al room: ${room}`));
+  }
+  
   onIframeLoad(){
     if (this.valid) {
       this.loading = false;
@@ -87,6 +111,7 @@ export class GamePageTemplate implements OnInit {
       if (this.timerId) {
         clearTimeout(this.timerId);
         this.timerId = null;
+        
       }
       return;
     }
@@ -99,25 +124,17 @@ export class GamePageTemplate implements OnInit {
     }
   }
 
-  connect() {
-    if (this.username.trim()) {
-      this.socketService.connect(this.username).then(()=>{
-        this.connected = true;
-        this.socketService.onMessage().subscribe((data) => {
-          this.msgService.addMessage(data)
-        });
-        this.socketService.onUserConnected().subscribe((username) => {
-          this.msgService.addMessage({username:MsgService.SERVER_NAME, msg:`${username} se ha conectado`})
-        });
-        this.msgService.addMessage({username:MsgService.SERVER_NAME, msg:`${this.username} se ha conectado`})
 
-        this.socketService.onUserDisconnected().subscribe((username) => {
-          this.msgService.addMessage({username:MsgService.SERVER_NAME, msg:`${username} se ha desconectado`});
-        });
-      }).catch(()=>{
-        alert('No se pudo conectar al servidor.');
-      })
-    }
+connect() {
+  if (this.username.trim()) {
+    this.socketService.connect(this.username).then((ok) => {
+      this.connected = !!ok;
+      if (!ok) {
+        console.warn('No se pudo conectar socket de chat');
+      }
+    }).catch(() => {
+      alert('No se pudo conectar al servidor.');
+    });
   }
-
+}
 }

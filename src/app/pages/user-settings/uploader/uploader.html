@@ -1,0 +1,18 @@
+<input #input type="file" (change)="onFileSelected(input)" accept="image/*" />
+
+<div class="avatar-section">
+<img #avatarImg (click)="triggerUpload(input)" [src]="uploadedImg || usuario.img" [alt]="usuario.username[0] || '' " class="avatar-preview">
+<button
+    mat-raised-button
+    color="accent"
+    (click)="triggerUpload(input)">
+    <mat-icon>image</mat-icon>
+    Cambiar imagen
+</button>
+</div>
+<!-- 
+<div (click)="triggerUpload(input)" class="upload"
+  [ngStyle]="{
+    backgroundImage: `url('${previewUrl}')`
+  }"
+></div> -->

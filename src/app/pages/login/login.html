@@ -8,16 +8,25 @@
     </mat-card-header>
 
     <mat-card-content>
-      <form class="login-form">
+      <form [formGroup]="loginForm" class="login-form" (ngSubmit)="login()">
         <mat-form-field appearance="outline">
           <mat-label>Correo electrónico</mat-label>
           <input
             matInput
             type="email"
-            [(ngModel)]="email"
-            name="email"
+            formControlName="email"
             placeholder="tu@email.com">
           <mat-icon matPrefix>email</mat-icon>
+          @if (loginForm.controls['email'].invalid && loginForm.controls['email'].touched) {
+            <mat-error>
+              @if (loginForm.controls['email'].errors?.['required']) {
+                El correo electrónico es requerido
+              }
+              @if (loginForm.controls['email'].errors?.['email']) {
+                Debe ingresar un correo electrónico válido
+              }
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -25,8 +34,7 @@
           <input
             matInput
             [type]="hidePassword ? 'password' : 'text'"
-            [(ngModel)]="password"
-            name="password"
+            formControlName="password"
             placeholder="••••••••">
           <mat-icon matPrefix>lock</mat-icon>
           <button
@@ -36,16 +44,30 @@
             (click)="hidePassword = !hidePassword">
             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
+          @if (loginForm.controls['password'].invalid && loginForm.controls['password'].touched) {
+            <mat-error>
+              @if (loginForm.controls['password'].errors?.['required']) {
+                La contraseña es requerida
+              }
+              @if (loginForm.controls['password'].errors?.['minlength']) {
+                La contraseña debe tener al menos 8 caracteres
+              }
+            </mat-error>
+          }
         </mat-form-field>
 
         <button
           mat-raised-button
+          name="login"
           color="primary"
           class="login-button"
-          type="button"
-          (click)="login()">
+          type="submit"
+          [disabled]="loginForm.invalid">
           Iniciar Sesión
         </button>
+        @if (isBrowser) {
+          <app-google-button (googleLogin)="onGoogleLogin($event)"></app-google-button>
+        }
       </form>
 
       <div class="register-link">
