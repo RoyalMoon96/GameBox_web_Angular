@@ -54,6 +54,7 @@ export class Uploader {
 
   triggerUpload(input: HTMLInputElement) {
     this.clearFile(input)
+    this.uploadService.file=undefined
     input.click();
   }
 
