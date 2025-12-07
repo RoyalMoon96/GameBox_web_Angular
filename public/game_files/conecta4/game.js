@@ -37,7 +37,7 @@ lobby.style.visibility = "visible"
 function connectSocket() {
   if (socket && socket.connected) return socket;
 
-  socket = io("http://localhost:3000", {
+  socket = io("https://game-box.azurewebsites.net", {
     transports: ["websocket"],
     auth: { token: localStorage.getItem("token") }
   });

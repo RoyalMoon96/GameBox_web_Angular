@@ -65,7 +65,7 @@
   function connectSocket() {
     if (socket && socket.connected) return socket;
     const token = getToken();
-    socket = io("http://localhost:3000",{
+    socket = io("https://game-box.azurewebsites.net",{
       transports: ["websocket"], 
       auth: { token }
     });

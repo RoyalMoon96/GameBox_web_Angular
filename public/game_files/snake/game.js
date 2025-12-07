@@ -8,7 +8,7 @@ let myRole = null;
 let opponentName = "";
 let gameRunning = false;
 
-const SERVER_URL = "http://localhost:3000";
+const SERVER_URL = "https://game-box.azurewebsites.net";
 
 // UI refs
 const lobby = document.getElementById("lobby");
