@@ -80,13 +80,15 @@
       statusDiv.innerText = 'Error conexión: ' + (err && err.message);
     });
     // custom events
-    socket.on("playerInfo", ({ self, opponent }) => {
+    
+    // CAMBIO: playerInfo -> playerInfoGato
+    socket.on("playerInfoGato", ({ self, opponent }) => {
       setMyName(self.username);
       setOpponentName(opponent.username);
       setMyRole(self.role);
     });
 
-    socket.on('roomCreated', (data) => {
+    socket.on('roomCreatedGato', (data) => {
       currentRoom = data.code;
       localStorage.setItem('room', currentRoom);
       roomCodeSpan.innerText = currentRoom;
@@ -95,7 +97,7 @@
       statusDiv.innerText = 'Sala creada. Esperando oponente...';
     });
 
-    socket.on('roomJoined', (data) => {
+    socket.on('roomJoinedGato', (data) => {
       currentRoom = data.code;
       localStorage.setItem('room', currentRoom);
       roomCodeSpan.innerText = currentRoom;
@@ -104,13 +106,13 @@
       statusDiv.innerText = 'Te uniste a la sala ' + currentRoom;
     });
 
-    socket.on('opponentJoined', (data) => {
+    socket.on('opponentJoinedGato', (data) => {
       setOpponentName(data.opponent.username);
       statusDiv.innerText = 'Oponente conectado: ' + data.opponent.username;
       updateTurnUI();
     });
 
-    socket.on('startGame', (data) => {
+    socket.on('startGameGato', (data) => {
       lobby.style.display = "none";
       gameArea.style.display = 'block';
       
@@ -122,13 +124,14 @@
       statusDiv.innerText = 'Partida iniciada';
     });
 
-    socket.on('boardUpdate', (data) => {
+    // CAMBIO: boardUpdate -> boardUpdateGato
+    socket.on('boardUpdateGato', (data) => {
       board = data.board;
       updateBoardUI();
       updateTurnUI(data.currentTurn);
     });
 
-    socket.on('gameOver', (data) => {
+    socket.on('gameOverGato', (data) => {
       updateBoardUI();
       if (data.winner) {
         resultDiv.innerText = `Gana: ${data.winner}`;
@@ -141,7 +144,7 @@
       statusDiv.innerText = 'Partida finalizada';
     });
 
-    socket.on("restartGame", (data) => {
+    socket.on("restartGameGato", (data) => {
       board = data.board;
       updateBoardUI();
       updateTurnUI(data.currentTurn);
@@ -150,7 +153,8 @@
     });
 
     
-    socket.on('errorMessage', (msg) => {
+    // CAMBIO: errorMessage -> errorMessageGato
+    socket.on('errorMessageGato', (msg) => {
       console.warn('Error server:', msg);
       statusDiv.innerText = 'Error: ' + msg;
     });
@@ -190,24 +194,27 @@
   // Emit create/join/move
   function createRoom() {
     const s = connectSocket();
-    s.emit('createRoom', { preferredCode: null /* server generates */ });
+    s.emit('createRoomGato', { preferredCode: null /* server generates */ });
   }
 
   function joinRoom(code) {
     const s = connectSocket();
-    s.emit('joinRoom', { code: code.toUpperCase() });
+    s.emit('joinRoomGato', { code: code.toUpperCase() });
   }
 
   function tryMakeMove(row, col) {
     if (!socket || !socket.connected) { alert('No conectado'); return; }
     const me = myRole === 'host' ? 'P1' : 'P2';
-    socket.emit('playerMove', { code: currentRoom, row, col });
+    socket.emit('playerMoveGato', { code: currentRoom, row, col });
   }
 
   // leave
   function leaveRoom() {
     if (!socket) return;
-    socket.emit('leaveRoom', { code: currentRoom });
+    
+    // CAMBIO: leaveRoom -> leaveRoomGato
+    socket.emit('leaveRoomGato', { code: currentRoom });
+    
     socket.disconnect();
     socket = null;
     localStorage.removeItem('room');
@@ -222,7 +229,7 @@
   // --- Buttons ---
   btnRestart.onclick = () => {
     if (myRole !== "host") return;
-    socket.emit("restartGame", { code: currentRoom });
+    socket.emit("restartGameGato", { code: currentRoom });
     btnRestart.style.display = "none";
   };
   btnCreate.onclick = () => {
