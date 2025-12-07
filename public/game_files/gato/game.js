@@ -65,7 +65,7 @@
   function connectSocket() {
     if (socket && socket.connected) return socket;
     const token = getToken();
-    socket = io("https://game-box.azurewebsites.net",{
+    socket = io("https://gamebox-api.westus3.cloudapp.azure.com",{
       transports: ["websocket"], 
       auth: { token }
     });
