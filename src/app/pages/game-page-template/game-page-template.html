@@ -18,7 +18,7 @@
                     (load)="onIframeLoad()"
                     [hidden]="loading"
                     [style.opacity]="loading ? 0 : 1"
-                    [style]="'-webkit-transform:scale(1);-moz-transform-scale(1);'"
+                    [style]="'-webkit-transform:scale(1);-moz-transform:scale(1);'"
             >
         </iframe>
     </div>
@@ -37,7 +37,7 @@
         <h2>{{game.categorys[0]}}</h2>
         @for (similarGame of similar_games; track $index) {
             <div class="similarGame">
-                <a (click)="openGame(similarGame)" >{{similarGame.name}}</a>
+                <a matButton="elevated" (click)="openGame(similarGame)" >{{similarGame.name}}</a>
             </div>
         }
     </div>

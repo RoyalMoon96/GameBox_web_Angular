@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 // Matirials
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 //Services
 import { GamesManagerService } from '../../shared/services/games-manager/games-manager-service';
@@ -23,7 +24,7 @@ import { IGame } from '../../shared/types/igame';
 
 @Component({
   selector: 'app-game-page-template',
-  imports: [Chat, MatIconModule, MatProgressSpinnerModule],
+  imports: [Chat, MatIconModule, MatProgressSpinnerModule, MatButtonModule],
   templateUrl: './game-page-template.html',
   styleUrl: './game-page-template.scss'
 })

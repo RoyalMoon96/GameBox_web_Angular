@@ -10,12 +10,14 @@
   }
 .complement-horizontal-container{
     @extend .horizontal-container;
-    height: calc(40vh - 30px - 10px - 80px - 20px);
+    min-height: calc(40vh - 30px - 10px - 80px - 20px);
+    max-height: fit-content
 }
 .description-container{
   @extend .container;
   width: calc(80vw - 20px);
-  padding-left: 10px
+  padding-left: 10px;
+  height: fit-content;
 }
 .games-list{
   @extend .container;
@@ -24,7 +26,14 @@
   padding-left: 10px
 }
 .similarGame{
-  padding-left: 10px
+  padding: 5px 10px;
+  height: fit-content;
+  a{
+    background-color: rgba(255, 255, 255, 0.142);
+    color: rgba(32, 32, 32, 0.77);
+    width: 100%;
+    margin-right: 100px;
+  }
 }
 .loader {
     display: flex;
